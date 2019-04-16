@@ -28,24 +28,33 @@ connection.connect(err => {
   console.log("MYSQL Connected!");
 });
 
-// app.get("/createdb", (req, res) => {
-connection.query("CREATE DATABASE IF NOT EXISTS notesDB", (err, results) => {
-  if (err) throw err;
-  console.log("database created", results);
-  // res.send("database created");
-});
-// });
-
-// app.get("/createtable", (req, res) => {
-connection.query(
-  "CREATE TABLE IF NOT EXISTS Notes(ID int NOT NULL AUTO_INCREMENT, Body varchar(255), Time datetime, PRIMARY KEY(id))",
-  (err, results) => {
+app.get("/createdb", (req, res) => {
+  connection.query("CREATE DATABASE IF NOT EXISTS notesDB", (err, results) => {
     if (err) throw err;
-    console.log("table created", results);
-    // res.send("table created");
-  }
-);
-// });
+    console.log("database created", results);
+    res.send("database created");
+  });
+});
+
+app.get("/createtable", (req, res) => {
+  connection.query(
+    "CREATE TABLE IF NOT EXISTS Notes(ID int NOT NULL AUTO_INCREMENT, Title varchar(255), Body varchar(255), Time datetime, PRIMARY KEY(id))",
+    (err, results) => {
+      if (err) throw err;
+      console.log("table created", results);
+      res.send("table created");
+    }
+  );
+});
+
+app.get("/allnotes", (req, res) => {
+  connection.query("SELECT * FROM Notes", (err, results) => {
+    if (err) throw err;
+    console.log("all notes", results);
+    // res.send(results);
+    res.json(results);
+  });
+});
 
 // connection.query(
 //   "INSERT INTO Notes (Body, Time) VALUES ('Note 1', NOW())",

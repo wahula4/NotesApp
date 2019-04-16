@@ -7,22 +7,37 @@ import EditNote from "./EditNote";
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = { apiResponse: "" };
+    this.state = { allNotes: [] };
   }
-  callAPI() {
-    fetch("/api")
-      .then(res => res.text())
-      .then(res => this.setState({ apiResponse: res }));
+  // callAPI() {
+  //   fetch("/api")
+  //     .then(res => res.text())
+  //     .then(res => this.setState({ apiResponse: res }));
+  // }
+
+  getAllNotes() {
+    fetch("/allnotes")
+      .then(res => res.json())
+      .then(notes => {
+        this.setState({ allNotes: notes }, () =>
+          console.log("all notes fetched", notes)
+        );
+      });
   }
+
   componentDidMount() {
-    this.callAPI();
+    // this.callAPI();
+    this.getAllNotes();
   }
   render() {
     return (
       <div className="App">
-        <p className="App-intro">{this.state.apiResponse}</p>
         <Switch>
-          <Route exact path="/" render={() => <Home />} />
+          <Route
+            exact
+            path="/"
+            render={() => <Home allNotes={this.state.allNotes} />}
+          />
           <Route path="/AddNote" render={() => <AddNote />} />
           <Route path="/EditNote" render={() => <EditNote />} />
         </Switch>
