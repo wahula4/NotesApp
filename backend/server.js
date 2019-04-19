@@ -9,11 +9,6 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get("/api", (req, res) => {
-  // res.send("Hello World!");
-  res.send({ express: "Hello From Express" });
-});
-
 // create db connection
 const connection = mysql.createConnection({
   host: "localhost",
@@ -56,12 +51,26 @@ app.get("/allnotes", (req, res) => {
   });
 });
 
-// connection.query(
-//   "INSERT INTO Notes (Body, Time) VALUES ('Note 1', NOW())",
-//   (err, results) => {
-//     if (err) throw err;
-//     console.log("table data added", results);
-//   }
-// );
+app.get("/api", (req, res) => {
+  // res.send("Hello World!");
+  res.send({ express: "Hello From Express" });
+});
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+app.post("/addnote", (req, res) => {
+  let { title, body, time } = req.body;
+  let query = `INSERT INTO notes
+  (
+      Title, Body, Time
+  )
+  VALUES
+  (
+      ?, ?, ?
+  )`;
+  connection.query(query, [title, body, time], (err, results) => {
+    if (err) throw err;
+    // return res.send("added note", results);
+  });
+  console.log(`title: ${title}, body: ${body}, time:${time}`);
+});
+
+app.listen(port, () => console.log(`App listening on port ${port}!`));
