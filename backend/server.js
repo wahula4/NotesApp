@@ -46,19 +46,22 @@ app.get("/allnotes", (req, res) => {
   connection.query("SELECT * FROM Notes", (err, results) => {
     if (err) throw err;
     console.log("all notes", results);
-    // res.send(results);
     res.json(results);
   });
 });
 
-app.get("/api", (req, res) => {
-  // res.send("Hello World!");
-  res.send({ express: "Hello From Express" });
+app.get("/note/:id", (req, res) => {
+  let sql = `SELECT * FROM notes WHERE ID = ${req.params.id}`;
+  connection.query(sql, (error, results, fields) => {
+    if (error) return console.error(error.message);
+    res.status(200).send(results);
+    console.log("results:", results);
+  });
 });
 
 app.post("/addnote", (req, res) => {
   let { title, body, time } = req.body;
-  let query = `INSERT INTO notes
+  let sql = `INSERT INTO notes
   (
       Title, Body, Time
   )
@@ -66,11 +69,34 @@ app.post("/addnote", (req, res) => {
   (
       ?, ?, ?
   )`;
-  connection.query(query, [title, body, time], (err, results) => {
+  connection.query(sql, [title, body, time], (err, results) => {
     if (err) throw err;
-    // return res.send("added note", results);
+    res.status(200).send(results);
   });
   console.log(`title: ${title}, body: ${body}, time:${time}`);
+});
+
+app.put("/edit", (req, res) => {
+  let { title, body, time, id } = req.body;
+  let sql = "UPDATE notes SET Title = ?, Body = ?, time = ? WHERE ID = ?";
+
+  connection.query(sql, [title, body, time, id], (error, results) => {
+    if (error) throw error;
+    res.status(200).send(results);
+    console.log("Rows affected:", results.affectedRows);
+  });
+});
+
+app.delete("/delete/:id", (req, res) => {
+  let sql = `DELETE FROM notes WHERE ID = ${req.params.id}`;
+  console.log("id: ", req.params.id);
+
+  // delete a row with id = req.params.id
+  connection.query(sql, (error, results, fields) => {
+    if (error) return console.error(error.message);
+    res.status(200).send(results);
+    console.log("Deleted Row(s):", results.affectedRows);
+  });
 });
 
 app.listen(port, () => console.log(`App listening on port ${port}!`));
