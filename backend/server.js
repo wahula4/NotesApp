@@ -9,13 +9,18 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+let connection;
 // create db connection
-const connection = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "password4",
-  database: "notesDB"
-});
+if (process.env.JAWSDB_URL) {
+  connection = mysql.createConnection(process.env.JAWSDB_URL);
+} else {
+  connection = mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    password: "password4",
+    database: "notesDB"
+  });
+}
 
 // connect to database
 connection.connect(err => {
