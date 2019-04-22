@@ -5,7 +5,7 @@ import { Link, withRouter } from "react-router-dom";
 
 const Navigation = () => {
   return (
-    <Navbar style={{ backgroundColor: "teal" }}>
+    <Navbar style={{ backgroundColor: "#242628" }}>
       <Navbar.Brand>
         <Link to="/" style={{ textDecoration: "none" }}>
           <b>Notes App</b>

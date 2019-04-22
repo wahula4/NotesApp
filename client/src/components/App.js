@@ -23,7 +23,6 @@ class App extends Component {
       .get("http://localhost:5000/allnotes")
       .then(res => {
         const allNotes = res.data;
-        console.log("res.data ", res.data);
         return this.setState({ allNotes });
       })
       .catch(err => {
@@ -47,32 +46,25 @@ class App extends Component {
       .then(data => {
         console.log("handlesubmit", data);
         return this.getAllNotes();
-        // let allNotes = this.state.allNotes;
-        // let newNote = { title: data.title, body: data.body, time: data.time };
-        // allNotes.push(newNote);
-        // this.setState({ allNotes });
       })
       .catch(err => {
         console.log(err);
       });
 
-    this.setState({ body: "", title: "" });
-    this.props.history.push("/");
+    this.setState({ body: "", title: "" }); // clear form after submit
+    this.props.history.push("/"); // redirect to home after submit
   };
 
+  // handle submit for editing a note
   handleEditSubmit = async event => {
     event.preventDefault();
-    let title = this.state.title;
-    let body = this.state.body;
+    let { title, body } = this.state;
     let time = moment(Date.now()).format("YYYY-MM-DD HH:mm:ss");
     let id = this.state.note[0].ID;
-    console.log("new title", this.state.title, "new body", this.state.body);
-    console.log("id:", id);
 
     await axios
       .put(`http://localhost:5000/edit`, { title, body, time, id })
       .then(data => {
-        console.log("handleEditSubmit", data);
         return this.getAllNotes();
       })
       .catch(err => {
@@ -83,44 +75,41 @@ class App extends Component {
     this.props.history.push("/");
   };
 
+  // when user clicks edit button, get note data and pre-fill edit form
   editNote = async id => {
     this.props.history.push("/editnote");
     await axios
       .get(`http://localhost:5000/note/${id}`)
       .then(res => {
         const note = res.data;
-        console.log("res.data ", res.data);
         this.setState({ note });
-        console.log("note: ", this.state.note);
+
         let title = note[0].Title;
         let body = note[0].Body;
-        console.log("title", note[0].Title, "body", note[0].Body);
+
         document.getElementById("title").value = title;
         document.getElementById("body").value = body;
+
+        this.setState({ title, body });
       })
       .catch(err => {
         console.error(err);
       });
   };
 
+  // delete note by id
   deleteNote = async id => {
-    // <-- declare id parameter
     await axios
-      .delete(`http://localhost:5000/delete/${id}`) // <-- remove ;
+      .delete(`http://localhost:5000/delete/${id}`)
       .then(() => {
-        // Issue GET request after item deleted to get updated list
-        // that excludes note of id
         return this.getAllNotes();
       })
-      // .then(res => {
-      //   const allNotes = res.data;
-      //   return this.setState({ allNotes });
-      // })
       .catch(err => {
         console.error(err);
       });
   };
 
+  // retrieve all notes from database on page load
   componentDidMount() {
     return this.getAllNotes();
   }

@@ -6,10 +6,6 @@ import { withRouter } from "react-router-dom";
 var moment = require("moment");
 
 class Home extends Component {
-  // route = () => {
-  //   this.props.history.push('/');
-  // }
-
   render() {
     return (
       <div>
@@ -20,16 +16,16 @@ class Home extends Component {
               <Card key={note.ID}>
                 <Card.Body>
                   <Card.Title>
-                    <u>{note.Title ? note.Title : "No Title"}</u>
+                    <b>{note.Title ? note.Title : "No Title"}</b>
                     <button
                       type="button"
-                      className="btn-sm btn-info float-right"
+                      className="btn-sm btn-primary float-right"
                       onClick={() =>
                         this.props.editNote(note.ID, note.Title, note.Body)
                       }
                     >
                       <span>
-                        <i className="fas fa-lg fa-edit" />
+                        <i className="fa fa-pen" />
                       </span>
                     </button>
                   </Card.Title>
@@ -39,7 +35,7 @@ class Home extends Component {
                       {moment(note.Time).format("lll")}
                       <button
                         type="button"
-                        className="btn-sm btn-info float-right"
+                        className="btn-sm btn-primary float-right"
                         onClick={() => this.props.deleteNote(note.ID)}
                       >
                         <span>

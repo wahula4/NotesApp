@@ -12,9 +12,9 @@ const AddNote = ({ title, body, handleChange, handleSubmit }) => {
           </Link>
         </Navbar.Brand>
       </Navbar>
-      <h1>Add Note</h1>
-      <div style={{ margin: "0 auto", width: "30%" }}>
-        <form onSubmit={handleSubmit}>
+      <h1 style={{ textAlign: "center" }}>Add Note</h1>
+      <div style={{ margin: "0 auto", width: "50%" }}>
+        <form onSubmit={handleSubmit} style={{ textAlign: "center" }}>
           <div className="form-group">
             <label>
               Title
@@ -24,11 +24,11 @@ const AddNote = ({ title, body, handleChange, handleSubmit }) => {
                 name="title"
                 value={title}
                 onChange={handleChange}
-                style={{ width: "100%" }}
+                required
               />
             </label>
           </div>
-          <div className="form-group" style={{ minWidth: "100%" }}>
+          <div className="form-group">
             <label>
               Note
               <textarea
@@ -37,7 +37,8 @@ const AddNote = ({ title, body, handleChange, handleSubmit }) => {
                 rows="4"
                 value={body}
                 onChange={handleChange}
-                style={{ minWidth: "100%" }}
+                style={{ display: "inline-block" }}
+                required
               />
             </label>
           </div>
